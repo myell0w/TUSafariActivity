@@ -52,7 +52,15 @@
 - (BOOL)canPerformWithActivityItems:(NSArray *)activityItems
 {
 	for (id activityItem in activityItems) {
-		if ([activityItem isKindOfClass:[NSURL class]] && [[UIApplication sharedApplication] canOpenURL:activityItem]) {
+        NSURL *URL = nil;
+
+        if ([activityItem isKindOfClass:[NSURL class]]) {
+            URL = activityItem;
+        } else if ([activityItem isKindOfClass:[NSString class]]) {
+            URL = [NSURL URLWithString:activityItem];
+        }
+
+		if (URL != nil && [[UIApplication sharedApplication] canOpenURL:URL]) {
 			return YES;
 		}
 	}
@@ -65,7 +73,13 @@
 	for (id activityItem in activityItems) {
 		if ([activityItem isKindOfClass:[NSURL class]]) {
 			_URL = activityItem;
-		}
+		} else if ([activityItem isKindOfClass:[NSString class]]) {
+            _URL = [NSURL URLWithString:activityItem];
+        }
+
+        if (_URL != nil && [[UIApplication sharedApplication] canOpenURL:_URL]) {
+            break;
+        }
 	}
 }
 
